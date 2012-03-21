@@ -22,15 +22,17 @@ def handle_con(conn, client):
                 buffer.append("VALUE %s 0 %d\r\n" % (key, len(val)))
                 buffer.append("%s\r\n" % val)
             buffer.append("END\r\n")
-            sockfile.write(''.join(buffer))
-            sockfile.flush()
+            conn.sendall(''.join(buffer))
+            #sockfile.write(''.join(buffer))
+            #sockfile.flush()
         elif cmd == "set":
             key = parts[1]
             length = int(parts[4])
             val = sockfile.read(length + 2)[:length]
             cache[key] = val
-            sockfile.write("STORED\r\n")
-            sockfile.flush()
+            conn.sendall("STORED\r\n")
+            #sockfile.write("STORED\r\n")
+            #sockfile.flush()
 
 if __name__ == "__main__":
     StreamServer(("127.0.0.1", 11211), handle_con).serve_forever()
