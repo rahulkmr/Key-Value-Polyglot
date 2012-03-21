@@ -20,6 +20,8 @@ class Server < EM::Connection
   def handle(data)
     if @waiting_for_value
       handle_set_value(data)
+    elsif data == "quit\r\n"
+      close_connection
     else
       cmd = data[0...data.index(/\s+/)]
       if cmd == 'get'
